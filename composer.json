@@ -1,0 +1,19 @@
+{
+    "name": "davidyell/seo",
+    "description": "A CakePHP plugin for managing SEO",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Yell",
+            "email": "neon1024@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+	"composer/installers": "~1.0"
+    },
+    "extra": {
+	"installer-name": "Seo"
+    }
+}
