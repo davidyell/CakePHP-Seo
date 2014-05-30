@@ -10,7 +10,7 @@ I found that by containing all the functionality for SEO inside a component it m
 ## Git
 Clone the repo into your `app/Plugin` folder. `git clone https://github.com/davidyell/CakePHP-Seo.git app/Plugin/Seo`
 ## Composer
-(https://packagist.org/packages/davidyell/seo)[https://packagist.org/packages/davidyell/seo]
+[https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
 `composer require davidyell/seo 0.0.3`
 
 # Setup
