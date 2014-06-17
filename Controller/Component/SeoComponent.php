@@ -10,10 +10,10 @@ App::uses('CakeEvent', 'Event');
  */
 
 class SeoComponent extends Component implements CakeEventListener {
-	
+
 /**
  * Store component settings
- * 
+ *
  * @var array
  */
 	public $settings = [
@@ -31,24 +31,24 @@ class SeoComponent extends Component implements CakeEventListener {
 			'keywords' => 'my, website, is, totally, awesome'
 		]
 	];
-	
+
 /**
  * Merge component settings
- * 
+ *
  * @param \ComponentCollection $collection
  * @param array $settings
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		$settings = array_merge($this->settings, $settings);
-		
+
 		parent::__construct($collection, $settings);
 	}
 
-	
+
 /**
  * Setup the component
  * Called after the Controller::beforeFilter() and before the controller action
- * 
+ *
  * @param Controller $controller
  */
 	public function startup(Controller $controller) {
@@ -60,7 +60,7 @@ class SeoComponent extends Component implements CakeEventListener {
 
 /**
  * List of callable functions which are attached to system events
- * 
+ *
  * @return array
  */
 	public function implementedEvents() {
@@ -68,33 +68,33 @@ class SeoComponent extends Component implements CakeEventListener {
 			'View.beforeLayout' => 'writeSeo'
 		);
 	}
-	
+
 /**
  * Inject the seo data into the view
- * 
+ *
  * @param CakeEvent $event
  * @return void
  */
 	public function writeSeo(CakeEvent $event) {
-		
+
 		$seoTitle = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
 		if (isset($seoTitle) && !empty($seoTitle)) {
 			$event->subject()->viewVars['title_for_layout'] = $seoTitle;
 		}
-		
+
 		$seoDescription = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']];
 		if (isset($seoDescription) && !empty($seoDescription)) {
 			$event->subject()->Html->meta('description', $seoDescription, ['block' => 'meta']);
 		}
-		
+
 		$seoKeywords = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']];
 		if (isset($seoKeywords) && !empty($seoKeywords)) {
 			$event->subject()->Html->meta('keywords', $seoKeywords, ['block' => 'meta']);
 		}
-		
-		
+
+
 		// Default
-		if (!isset($event->subject()->viewVars['content']['Content']['seo_title'])) {
+		if (!isset($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']])) {
 			$event->subject()->viewVars['title_for_layout'] = $this->settings['defaults']['title'];
 			$event->subject()->Html->meta('description', $this->settings['defaults']['description'], ['block' => 'meta']);
 			$event->subject()->Html->meta('keywords', $this->settings['defaults']['keywords'], ['block' => 'meta']);
