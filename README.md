@@ -46,3 +46,14 @@ echo $this->fetch('title');
 // For outputting the meta tags inside <head>
 echo $this->fetch('meta');
 ```
+
+# Tips and Tricks
+Got two viewVars set in your controller and you want to change it up depending on which is set?
+```php
+// ProvidersController::beforeRender()
+if (isset($this->viewVars['content'])) {
+	$this->Components->load('Seo.Seo');
+} elseif (isset($this->viewVars['provider'])) {
+	$this->Components->load('Seo.Seo', ['viewVar' => 'provider']);
+}
+```
