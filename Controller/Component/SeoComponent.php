@@ -24,7 +24,7 @@ class SeoComponent extends Component implements CakeEventListener {
 			'description' => 'seo_description',
 			'keywords' => 'seo_keywords'
 		],
-		'noSeoPrefix' => ['admin'], // Any routing prefixes you do not SEO run
+		'noSeoPrefix' => ['admin'], // Any routing prefixes you do not SEO
 		'defaults' => [
 			'title' => 'The homepage | My Awesome Website',
 			'description' => 'Find out about how awesome I am by reading my website',
@@ -35,7 +35,7 @@ class SeoComponent extends Component implements CakeEventListener {
 /**
  * Merge component settings
  *
- * @param \ComponentCollection $collection
+ * @param ComponentCollection $collection
  * @param array $settings
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
@@ -93,10 +93,14 @@ class SeoComponent extends Component implements CakeEventListener {
 		}
 
 
-		// Default
-		if (!isset($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']])) {
+		// If no values can be found, fall back to the defaults
+		if (empty($seoTitle)) {
 			$event->subject()->viewVars['title_for_layout'] = $this->settings['defaults']['title'];
+		}
+		if (empty($seoDescription)) {
 			$event->subject()->Html->meta('description', $this->settings['defaults']['description'], ['block' => 'meta']);
+		}
+		if (empty($seoKeywords)) {
 			$event->subject()->Html->meta('keywords', $this->settings['defaults']['keywords'], ['block' => 'meta']);
 		}
 
