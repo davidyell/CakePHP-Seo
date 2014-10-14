@@ -33,9 +33,9 @@ class SeoHelper extends AppHelper {
 				$prev = "<link rel='prev' href='" . Router::url(array('controller' => $controller, 'action' => 'index', 'page' => $this->request->params['paging'][$className]['page'] - 1)) . "'>";
 				$next = "<link rel='next' href='" . Router::url(array('controller' => $controller, 'action' => 'index', 'page' => $this->request->params['paging'][$className]['page'] + 1)) . "'>";
 
-				if ($this->request->params['paging']['NewsArticle']['prevPage'] === false) { // page 1
+				if ($this->request->params['paging'][$className]['prevPage'] === false) { // page 1
 					return $next;
-				} elseif ($this->request->params['paging']['NewsArticle']['nextPage'] === false) {
+				} elseif ($this->request->params['paging'][$className]['nextPage'] === false) {
 					return $prev;
 				} else {
 					return $next . $prev;
