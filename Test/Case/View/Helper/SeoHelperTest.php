@@ -80,30 +80,30 @@ class SeoHelperTest extends CakeTestCase {
             [
                 '/tests/index/page:5',
                 [
-                    'sort:id'
+                    'sort' => 'id'
                 ],
                 "<link rel='canonical' href='http://localhost/tests/index'>"
             ],
             [
                 '/tests/index/page:5',
                 [
-                    'dir:desc'
+                    'dir' => 'desc'
                 ],
                 "<link rel='canonical' href='http://localhost/tests/index'>"
             ],
             [
                 '/tests/index/page:5',
                 [
-                    'sort:id',
-                    'dir:desc'
+                    'sort' => 'id',
+                    'dir' => 'desc'
                 ],
                 "<link rel='canonical' href='http://localhost/tests/index'>"
             ],
             [
                 '/tests/index',
                 [
-                    'sort:id',
-                    'dir:desc'
+                    'sort' => 'id',
+                    'dir' => 'desc'
                 ],
                 "<link rel='canonical' href='http://localhost/tests/index'>"
             ],

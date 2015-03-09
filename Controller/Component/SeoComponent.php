@@ -35,8 +35,8 @@ class SeoComponent extends Component implements CakeEventListener {
 /**
  * Merge component settings
  *
- * @param ComponentCollection $collection
- * @param array $settings
+ * @param ComponentCollection $collection The component collection
+ * @param array $settings Array of component settings
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		$settings = array_merge($this->settings, $settings);
@@ -44,12 +44,11 @@ class SeoComponent extends Component implements CakeEventListener {
 		parent::__construct($collection, $settings);
 	}
 
-
 /**
  * Setup the component
  * Called after the Controller::beforeFilter() and before the controller action
  *
- * @param Controller $controller
+ * @param Controller $controller The controller instance
  */
 	public function startup(Controller $controller) {
 		parent::startup($controller);
@@ -72,11 +71,10 @@ class SeoComponent extends Component implements CakeEventListener {
 /**
  * Inject the seo data into the view
  *
- * @param CakeEvent $event
+ * @param CakeEvent $event Event instance
  * @return void
  */
 	public function writeSeo(CakeEvent $event) {
-
 		$seoTitle = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
 		if (isset($seoTitle) && !empty($seoTitle)) {
 			$event->subject()->viewVars['title_for_layout'] = $seoTitle;
@@ -92,7 +90,6 @@ class SeoComponent extends Component implements CakeEventListener {
 			$event->subject()->Html->meta('keywords', $seoKeywords, ['block' => 'meta']);
 		}
 
-
 		// If no values can be found, fall back to the defaults
 		if (empty($seoTitle)) {
 			$event->subject()->viewVars['title_for_layout'] = $this->settings['defaults']['title'];
@@ -103,6 +100,5 @@ class SeoComponent extends Component implements CakeEventListener {
 		if (empty($seoKeywords)) {
 			$event->subject()->Html->meta('keywords', $this->settings['defaults']['keywords'], ['block' => 'meta']);
 		}
-
 	}
 }
