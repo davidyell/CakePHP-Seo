@@ -11,7 +11,6 @@ I found that by containing all the functionality for SEO inside a component it m
 Clone the repo into your `app/Plugin` folder. `git clone https://github.com/davidyell/CakePHP-Seo.git app/Plugin/Seo`
 ## Composer
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
-`composer require davidyell/seo 0.1.2`
 
 # Setup
 Firstly you will need to load the plugin in your `app/Config/bootstrap.php`.
