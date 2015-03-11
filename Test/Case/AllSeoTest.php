@@ -2,7 +2,7 @@
 
 /**
  * @category Seo
- * @package AllTestsTest.php
+ * @package AllSeoTest.php
  * 
  * @author David Yell <neon1024@gmail.com>
  * @when 09/03/15
@@ -10,7 +10,7 @@
  */
 App::uses('CakePlugin', 'Core');
 
-class AllTestsTest extends CakeTestSuite {
+class AllSeoTest extends CakeTestSuite {
 
 	public static function suite() {
 		$suite = new CakeTestSuite('All CakePHP-Seo plugin tests');
