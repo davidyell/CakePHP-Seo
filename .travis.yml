@@ -30,6 +30,7 @@ script:
   - ../travis/script.sh
 
 after_success:
+  - pwd
   - ../travis/after_success.sh
 
 notifications:
