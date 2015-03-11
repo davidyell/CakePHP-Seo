@@ -21,7 +21,7 @@ class SeoHelper extends AppHelper {
  * When using a paginated set of pages a link tag is used to show which pages
  * are previous and next in the paginated series
  *
- * @param string $controller
+ * @param string $controller The name of the controller
  * @return string
  */
 	public function pagination($controller) {
@@ -47,13 +47,13 @@ class SeoHelper extends AppHelper {
 /**
  * Output a canonical tag for content with multiple pages or other dynamic data
  *
- * @param string $controller
- * @param string $action
+ * @param string $controller The name of the controller
+ * @param string $action The name of the action
  * @return string
  */
 	public function canonical($controller, $action) {
 		$url = preg_replace("/page:[0-9]+/", '', $this->here);
-		
+
 		if (isset($this->request->params['sort'])) {
 			$url = str_replace($this->request->params['sort'], '', $url);
 		}
@@ -62,7 +62,7 @@ class SeoHelper extends AppHelper {
 		}
 		$url = rtrim($url, '/');
 		$url = Router::fullbaseUrl() . $url;
-		
+
 		return "<link rel='canonical' href='$url'>";
 	}
 

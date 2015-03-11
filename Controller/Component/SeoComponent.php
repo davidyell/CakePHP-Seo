@@ -49,6 +49,7 @@ class SeoComponent extends Component implements CakeEventListener {
  * Called after the Controller::beforeFilter() and before the controller action
  *
  * @param Controller $controller The controller instance
+ * @return void
  */
 	public function startup(Controller $controller) {
 		parent::startup($controller);
