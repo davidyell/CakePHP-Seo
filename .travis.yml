@@ -9,8 +9,8 @@ env:
     - PLUGIN_NAME=Seo
 
   matrix:
-    - DB=mysql CAKE_VERSION=2.5
-    - DB=mysql CAKE_VERSION=2.6
+    - DB=mysql CAKE_VERSION=2.5.0
+    - DB=mysql CAKE_VERSION=2.6.0
 
 matrix:
   include:

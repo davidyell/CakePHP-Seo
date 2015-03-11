@@ -20,9 +20,6 @@ class SeoComponentTest extends CakeTestCase {
 		$this->Controller = new Controller();
 	}
 
-	/**
-	 *
-	 */
 	public function testWriteSeo() {
 		$component = new SeoComponent($this->ComponentCollection);
 
@@ -50,9 +47,6 @@ class SeoComponentTest extends CakeTestCase {
 		$this->assertEqual($title, 'Test SEO title');
 	}
 
-	/**
-	 *
-	 */
 	public function testWriteSeoEmptyConfig() {
 		$component = new SeoComponent($this->ComponentCollection);
 

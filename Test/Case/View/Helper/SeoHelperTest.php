@@ -44,11 +44,11 @@ class SeoHelperTest extends CakeTestCase {
 		];
 	}
 
-	/**
-	 * @param $pagingArray
-	 * @param $expected
-	 * @dataProvider paginationProvider
-	 */
+/**
+ * @param $pagingArray
+ * @param $expected
+ * @dataProvider paginationProvider
+ */
 	public function testPagination($pagingArray, $expected) {
 		$this->Request = new CakeRequest();
 		$this->Request->params['paging'] = $pagingArray;
@@ -110,11 +110,11 @@ class SeoHelperTest extends CakeTestCase {
 		];
 	}
 
-	/**
-	 * @param $paramsArray
-	 * @param $expected
-	 * @dataProvider canonicalProvider
-	 */
+/**
+ * @param $paramsArray
+ * @param $expected
+ * @dataProvider canonicalProvider
+ */
 	public function testCanonical($here, $paramsArray, $expected) {
 		$this->Request = new CakeRequest();
 		$this->Request->params = $paramsArray;
