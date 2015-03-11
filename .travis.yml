@@ -25,12 +25,14 @@ matrix:
 before_script:
   - git clone -b master https://github.com/FriendsOfCake/travis.git --depth 1 ../travis
   - ../travis/before_script.sh
+  - pwd
+  - ls -lha
+  - cat .coveralls.yml
 
 script:
   - ../travis/script.sh
 
 after_success:
-  - pwd
   - ../travis/after_success.sh
 
 notifications:
