@@ -76,19 +76,27 @@ class SeoComponent extends Component implements CakeEventListener {
  * @return void
  */
 	public function writeSeo(CakeEvent $event) {
-		$seoTitle = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
-		if (isset($seoTitle) && !empty($seoTitle)) {
+		if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']])) {
+			$seoTitle = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
 			$event->subject()->viewVars['title_for_layout'] = $seoTitle;
 		}
 
-		$seoDescription = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']];
-		if (isset($seoDescription) && !empty($seoDescription)) {
-			$event->subject()->Html->meta('description', $seoDescription, ['block' => 'meta']);
+		if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']])) {
+			$seoDescription = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']];
+			$event->subject()->Html->meta(
+				'description',
+				$seoDescription,
+				['block' => 'meta']
+			);
 		}
 
-		$seoKeywords = @$event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']];
-		if (isset($seoKeywords) && !empty($seoKeywords)) {
-			$event->subject()->Html->meta('keywords', $seoKeywords, ['block' => 'meta']);
+		if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']])) {
+			$seoKeywords = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']];
+			$event->subject()->Html->meta(
+				'keywords',
+				$seoKeywords,
+				['block' => 'meta']
+			);
 		}
 
 		// If no values can be found, fall back to the defaults

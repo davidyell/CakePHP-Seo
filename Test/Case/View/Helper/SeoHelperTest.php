@@ -68,9 +68,9 @@ class SeoHelperTest extends CakeTestCase {
 	public function canonicalProvider() {
 		return [
 			[
-			   '/tests/index',
-			   [],
-			   "<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests/index',
+				[],
+				"<link rel='canonical' href='http://localhost/tests/index'>"
 			],
 			[
 				'/tests/index/page:5',
