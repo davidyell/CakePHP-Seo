@@ -1,5 +1,7 @@
 CakePHP-Seo
 ===========
+[![Build Status](https://travis-ci.org/davidyell/CakePHP-Seo.svg?branch=master)](https://travis-ci.org/davidyell/CakePHP-Seo)
+[![Coverage Status](https://coveralls.io/repos/davidyell/CakePHP-Seo/badge.svg)](https://coveralls.io/r/davidyell/CakePHP-Seo)
 
 # What is it?
 I always need to add meta tags to my pages for SEO purposes and it was getting tedious writing tools to complete this every time. So I created a component which hooks the event system to catch the `beforeLayout` event to inject SEO data into the view variables.

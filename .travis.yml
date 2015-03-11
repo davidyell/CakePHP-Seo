@@ -7,6 +7,7 @@ php:
 env:
   global:
     - PLUGIN_NAME=Seo
+    - CAKE_VERSION=2.6
 
   matrix:
     - DB=mysql CAKE_VERSION=2.5
@@ -14,10 +15,10 @@ env:
 
 matrix:
   include:
-    - php: 5.4
+    - php: 5.5
       env:
         - COVERALLS=1
-    - php: 5.4
+    - php: 5.5
       env:
         - PHPCS=1
 
