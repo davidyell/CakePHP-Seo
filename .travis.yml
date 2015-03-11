@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
 
@@ -10,8 +9,8 @@ env:
     - PLUGIN_NAME=Seo
 
   matrix:
-    - DB=mysql CAKE_VERSION=2.4
     - DB=mysql CAKE_VERSION=2.5
+    - DB=mysql CAKE_VERSION=2.6
 
 matrix:
   include:
