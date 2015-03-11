@@ -10,6 +10,7 @@ env:
     - CAKE_VERSION=2.6
 
   matrix:
+    - CAKE_VERSION=2.6
     - CAKE_VERSION=2.5
 
 matrix:
