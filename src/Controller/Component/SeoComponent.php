@@ -3,9 +3,8 @@
 namespace Seo\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Event\EventListenerInterface;
-use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
 
 /**
  * Component to find and load seo data and inject it into the view
