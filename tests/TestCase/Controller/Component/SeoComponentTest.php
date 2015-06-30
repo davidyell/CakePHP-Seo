@@ -1,5 +1,7 @@
 <?php
 
+namespace Seo\Tests\Controller\Component;
+
 /**
  * @category Seo
  * @package SeoComponentTest.php
@@ -8,20 +10,24 @@
  * @when 09/03/15
  *
  */
-App::uses('SeoComponent', 'Seo.Controller/Component');
-App::uses('ComponentCollection', 'Controller');
-App::uses('View', 'View');
-App::uses('Controller', 'Controller');
 
-class SeoComponentTest extends CakeTestCase {
+use Seo\Controller\Component\SeoComponent;
+use Cake\Controller\ComponentRegistry;
+use Cake\View\View;
+use Cake\Controller\Controller;
+use Cake\Event\Event;
 
-	public function setUp() {
-		$this->ComponentCollection = new ComponentCollection();
+class SeoComponentTest extends \PHPUnit_Framework_TestCase {
+
+	public function setUp()
+	{
 		$this->Controller = new Controller();
+		$this->ComponentRegistry = new ComponentRegistry($this->Controller);
 	}
 
-	public function testWriteSeo() {
-		$component = new SeoComponent($this->ComponentCollection);
+	public function testWriteSeo()
+	{
+		$component = new SeoComponent($this->ComponentRegistry);
 
 		$view = $this->getMockBuilder('View')
 			->setConstructorArgs([$this->Controller])
@@ -39,7 +45,7 @@ class SeoComponentTest extends CakeTestCase {
 			]
 		]);
 
-		$event = new CakeEvent('view.beforeLayout', $view, []);
+		$event = new Event('view.beforeLayout', $view, []);
 
 		$result = $component->writeSeo($event);
 
@@ -47,8 +53,9 @@ class SeoComponentTest extends CakeTestCase {
 		$this->assertEqual($title, 'Test SEO title');
 	}
 
-	public function testWriteSeoEmptyConfig() {
-		$component = new SeoComponent($this->ComponentCollection);
+	public function testWriteSeoEmptyConfig()
+	{
+		$component = new SeoComponent($this->ComponentRegistry);
 
 		$view = $this->getMockBuilder('View')
 			->setConstructorArgs([$this->Controller])

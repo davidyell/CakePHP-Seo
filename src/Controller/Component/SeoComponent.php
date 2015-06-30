@@ -4,6 +4,8 @@ namespace Seo\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Event\EventListenerInterface;
+use Cake\Controller\ComponentRegistry;
+use Cake\Event\Event;
 
 /**
  * Component to find and load seo data and inject it into the view
@@ -36,6 +38,18 @@ class SeoComponent extends Component implements EventListenerInterface
     ];
     
     /**
+     * Get the controller from the Registry during construction
+     * 
+     * @param ComponentRegistry $registry The component registry
+     * @param array $config Component configuration array
+     */
+    public function __construct(ComponentRegistry $registry, array $config = [])
+    {
+        parent::__construct($registry, $config);
+        $this->_controller = $registry->getController();
+    }
+    
+    /**
      * Create the class
      *
      * @param array $config The component configuration array
@@ -43,7 +57,9 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function initialize(array $config)
     {
-        if (!in_array($controller->request->prefix, $this->settings['noSeoPrefix'])) {
+        var_dump($this->_controller);
+        
+        if (!in_array($this->_controller->request->prefix, $this->settings['noSeoPrefix'])) {
             $controller->getEventManager()->attach($this);
         }
     }
@@ -63,10 +79,10 @@ class SeoComponent extends Component implements EventListenerInterface
     /**
      * Inject the seo data into the view
      *
-     * @param CakeEvent $event Event instance
+     * @param \Cake\Event\Event $event Event instance
      * @return void
      */
-    public function writeSeo(CakeEvent $event)
+    public function writeSeo(Event $event)
     {
         if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']])) {
             $seoTitle = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
