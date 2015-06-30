@@ -1,30 +1,32 @@
 <?php
-/*
- * SeoHelper
- */
-App::uses('AppHelper', 'View/Helper');
+
+namespace Seo\View\Helper;
+
+use Cake\View\Helper;
+
 /**
  * Helper for outputting various tags to do with SEO
  *
  * @author David Yell <neon1024@gmail.com>
  */
-class SeoHelper extends AppHelper {
+class SeoHelper extends Helper {
 
-/**
- * Keep a list of all the controllers which generate paginated lists of items
- *
- * @var array
- */
+	/**
+	 * Keep a list of all the controllers which generate paginated lists of items
+	 *
+	 * @var array
+	 */
 	public $paginatedControllers = array();
 
-/**
- * When using a paginated set of pages a link tag is used to show which pages
- * are previous and next in the paginated series
- *
- * @param string $controller The name of the controller
- * @return string
- */
-	public function pagination($controller) {
+	/**
+	 * When using a paginated set of pages a link tag is used to show which pages
+	 * are previous and next in the paginated series
+	 *
+	 * @param string $controller The name of the controller
+	 * @return string
+	 */
+	public function pagination($controller)
+	{
 		if (in_array($controller, $this->paginatedControllers)) {
 
 			$className = Inflector::classify($controller);
@@ -44,14 +46,15 @@ class SeoHelper extends AppHelper {
 		}
 	}
 
-/**
- * Output a canonical tag for content with multiple pages or other dynamic data
- *
- * @param string $controller The name of the controller
- * @param string $action The name of the action
- * @return string
- */
-	public function canonical($controller, $action) {
+	/**
+	 * Output a canonical tag for content with multiple pages or other dynamic data
+	 *
+	 * @param string $controller The name of the controller
+	 * @param string $action The name of the action
+	 * @return string
+	 */
+	public function canonical($controller, $action)
+	{
 		$url = preg_replace("/page:[0-9]+/", '', $this->here);
 
 		if (isset($this->request->params['sort'])) {

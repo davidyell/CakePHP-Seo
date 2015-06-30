@@ -9,11 +9,13 @@
       "email": "neon1024@gmail.com"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
-    "composer/installers": "~1.0"
+    "php": ">=5.4.16",
+    "cakephp/cakephp": "~3.0"
   },
-  "extra": {
-    "installer-name": "Seo"
+  "autoload": {
+    "psr-4": {
+      "Seo\\": "src"
+    }
   }
 }

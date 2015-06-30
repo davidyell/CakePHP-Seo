@@ -1,7 +1,9 @@
 <?php
 
-App::uses('CakeEventListener', 'Event');
-App::uses('CakeEvent', 'Event');
+namespace Seo\Controller\Component;
+
+use Cake\Controller\Component;
+use Cake\Event\EventListenerInterface;
 
 /**
  * Component to find and load seo data and inject it into the view
@@ -9,14 +11,14 @@ App::uses('CakeEvent', 'Event');
  * @author David Yell <neon1024@gmail.com>
  */
 
-class SeoComponent extends Component implements CakeEventListener {
+class SeoComponent extends Component implements EventListenerInterface {
 
-/**
- * Store component settings
- *
- * @var array
- */
-	public $settings = [
+	/**
+	 * Store component settings
+	 *
+	 * @var array
+	 */
+	protected $_defaultConfig = [
 		'viewVar' => 'content', // Name of the view variable being used in views
 		'model' => 'Content', // Model containing the fields
 		'fields' => [
@@ -31,39 +33,27 @@ class SeoComponent extends Component implements CakeEventListener {
 			'keywords' => 'my, website, is, totally, awesome'
 		]
 	];
-
-/**
- * Merge component settings
- *
- * @param ComponentCollection $collection The component collection
- * @param array $settings Array of component settings
- */
-	public function __construct(ComponentCollection $collection, $settings = array()) {
-		$settings = array_merge($this->settings, $settings);
-
-		parent::__construct($collection, $settings);
-	}
-
-/**
- * Setup the component
- * Called after the Controller::beforeFilter() and before the controller action
- *
- * @param Controller $controller The controller instance
- * @return void
- */
-	public function startup(Controller $controller) {
-		parent::startup($controller);
+	
+	/**
+	 * Create the class
+	 * 
+	 * @param array $config The component configuration array
+	 * @return void
+	 */
+	public function initialize(array $config)
+	{
 		if (!in_array($controller->request->prefix, $this->settings['noSeoPrefix'])) {
 			$controller->getEventManager()->attach($this);
 		}
 	}
 
-/**
- * List of callable functions which are attached to system events
- *
- * @return array
- */
-	public function implementedEvents() {
+	/**
+	 * List of callable functions which are attached to system events
+	 *
+	 * @return array
+	 */
+	public function implementedEvents()
+	{
 		return array(
 			'View.beforeLayout' => 'writeSeo'
 		);
