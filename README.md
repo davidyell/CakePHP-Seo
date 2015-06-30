@@ -28,14 +28,12 @@ Plugin::load('Seo');
 Then you will need to attach it to the controller you want it to run on. I tend to attach it to my `AppController`.
 
 ```php
-// src/Controller/AppController.php
-public $components = [
-	'Seo.Seo' => [
-		'defaults' => [
-			'title' => 'Dave is epic',
-			'description' => 'This is an epic plugin for epic people',
-			'keywords' => 'epic,plugin'
-		]
+// src/Controller/AppController.php initialize() method
+$this->loadComponent('Seo.Seo' => [
+	'defaults' => [
+		'title' => 'Dave is epic',
+		'description' => 'This is an epic plugin for epic people',
+		'keywords' => 'epic,plugin'
 	]
 ];
 ```
