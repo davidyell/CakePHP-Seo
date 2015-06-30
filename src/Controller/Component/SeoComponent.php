@@ -15,6 +15,12 @@ use Cake\Event\Event;
 
 class SeoComponent extends Component implements EventListenerInterface
 {
+    /**
+     * The controller instance
+     *
+     * @var \Cake\Controller\Controller
+     */
+    protected $_controller;
 
     /**
      * Store component settings
@@ -38,18 +44,6 @@ class SeoComponent extends Component implements EventListenerInterface
     ];
     
     /**
-     * Get the controller from the Registry during construction
-     * 
-     * @param ComponentRegistry $registry The component registry
-     * @param array $config Component configuration array
-     */
-    public function __construct(ComponentRegistry $registry, array $config = [])
-    {
-        parent::__construct($registry, $config);
-        $this->_controller = $registry->getController();
-    }
-    
-    /**
      * Create the class
      *
      * @param array $config The component configuration array
@@ -57,10 +51,10 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function initialize(array $config)
     {
-        var_dump($this->_controller);
-        
-        if (!in_array($this->_controller->request->prefix, $this->settings['noSeoPrefix'])) {
-            $controller->getEventManager()->attach($this);
+        $this->_controller = $this->_registry->getController();
+
+        if (!in_array($this->_controller->request->prefix, $this->config('noSeoPrefix'))) {
+            $this->_controller->eventManager()->on($this);
         }
     }
 
@@ -84,13 +78,13 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function writeSeo(Event $event)
     {
-        if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']])) {
-            $seoTitle = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['title']];
-            $event->subject()->viewVars['title_for_layout'] = $seoTitle;
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.title')])) {
+            $seoTitle = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.title')];
+            $event->subject()->viewVars['title'] = $seoTitle;
         }
 
-        if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']])) {
-            $seoDescription = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['description']];
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.description')])) {
+            $seoDescription = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.description')];
             $event->subject()->Html->meta(
                 'description',
                 $seoDescription,
@@ -98,8 +92,8 @@ class SeoComponent extends Component implements EventListenerInterface
             );
         }
 
-        if (!empty($event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']])) {
-            $seoKeywords = $event->subject()->viewVars[$this->settings['viewVar']][$this->settings['model']][$this->settings['fields']['keywords']];
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.keywords')])) {
+            $seoKeywords = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.keywords')];
             $event->subject()->Html->meta(
                 'keywords',
                 $seoKeywords,
@@ -109,13 +103,13 @@ class SeoComponent extends Component implements EventListenerInterface
 
         // If no values can be found, fall back to the defaults
         if (empty($seoTitle)) {
-            $event->subject()->viewVars['title_for_layout'] = $this->settings['defaults']['title'];
+            $event->subject()->viewVars['title'] = $this->config('defaults.title');
         }
         if (empty($seoDescription)) {
-            $event->subject()->Html->meta('description', $this->settings['defaults']['description'], ['block' => 'meta']);
+            $event->subject()->Html->meta('description', $this->config('defaults.description'), ['block' => 'meta']);
         }
         if (empty($seoKeywords)) {
-            $event->subject()->Html->meta('keywords', $this->settings['defaults']['keywords'], ['block' => 'meta']);
+            $event->subject()->Html->meta('keywords', $this->config('defaults.keywords'), ['block' => 'meta']);
         }
     }
 }

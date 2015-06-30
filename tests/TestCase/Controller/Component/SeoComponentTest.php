@@ -5,71 +5,67 @@ namespace Seo\Tests\Controller\Component;
 /**
  * @category Seo
  * @package SeoComponentTest.php
- * 
+ *
  * @author David Yell <neon1024@gmail.com>
  * @when 09/03/15
  *
  */
 
-use Seo\Controller\Component\SeoComponent;
 use Cake\Controller\ComponentRegistry;
-use Cake\View\View;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Seo\Controller\Component\SeoComponent;
 
-class SeoComponentTest extends \PHPUnit_Framework_TestCase {
+class SeoComponentTest extends \PHPUnit_Framework_TestCase
+{
 
-	public function setUp()
-	{
-		$this->Controller = new Controller();
-		$this->ComponentRegistry = new ComponentRegistry($this->Controller);
-	}
+    public function setUp()
+    {
+        $this->Controller = new Controller();
+        $this->Controller->name = 'TestsController';
+        $this->ComponentRegistry = new ComponentRegistry($this->Controller);
+        $this->Seo = new SeoComponent($this->ComponentRegistry);
+    }
 
-	public function testWriteSeo()
-	{
-		$component = new SeoComponent($this->ComponentRegistry);
+    public function testWriteSeo()
+    {
+        $view = $this->getMockBuilder('Cake\View\View')
+            ->setMethods(['append'])
+            ->getMock();
 
-		$view = $this->getMockBuilder('View')
-			->setConstructorArgs([$this->Controller])
-			->setMethods(['append'])
-			->getMock();
+        $view->expects($this->exactly(2))
+            ->method('append');
 
-		$view->expects($this->exactly(2))
-			->method('append');
+        $view->set('content', [
+            'Content' => [
+                'seo_title' => 'Test SEO title',
+                'seo_description' => 'Test SEO description',
+                'seo_keywords' => 'Test SEO keywords'
+            ]
+        ]);
 
-		$view->set('content', [
-			'Content' => [
-				'seo_title' => 'Test SEO title',
-				'seo_description' => 'Test SEO description',
-				'seo_keywords' => 'Test SEO keywords'
-			]
-		]);
+        $event = new Event('view.beforeLayout', $view, []);
 
-		$event = new Event('view.beforeLayout', $view, []);
+        $this->Seo->writeSeo($event);
 
-		$result = $component->writeSeo($event);
+        $title = $event->subject()->viewVars['title'];
+        $this->assertEquals('Test SEO title', $title);
+    }
 
-		$title = $event->subject()->viewVars['title_for_layout'];
-		$this->assertEqual($title, 'Test SEO title');
-	}
+    public function testWriteSeoEmptyConfig()
+    {
+        $view = $this->getMockBuilder('Cake\View\View')
+            ->setMethods(['append'])
+            ->getMock();
 
-	public function testWriteSeoEmptyConfig()
-	{
-		$component = new SeoComponent($this->ComponentRegistry);
+        $view->expects($this->exactly(2))
+            ->method('append');
 
-		$view = $this->getMockBuilder('View')
-			->setConstructorArgs([$this->Controller])
-			->setMethods(['append'])
-			->getMock();
+        $event = new Event('view.beforeLayout', $view, []);
 
-		$view->expects($this->exactly(2))
-			->method('append');
+        $this->Seo->writeSeo($event);
 
-		$event = new CakeEvent('view.beforeLayout', $view, []);
-
-		$result = $component->writeSeo($event);
-
-		$title = $event->subject()->viewVars['title_for_layout'];
-		$this->assertEqual($title, 'The homepage | My Awesome Website');
-	}
+        $title = $event->subject()->viewVars['title'];
+        $this->assertEquals('The homepage | My Awesome Website', $title);
+    }
 }

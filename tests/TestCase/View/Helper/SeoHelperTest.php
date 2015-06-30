@@ -1,5 +1,7 @@
 <?php
 
+namespace Seo\Tests\View\Helper;
+
 /**
  * @category Seo
  * @package SeoHelperTest.php
@@ -8,12 +10,14 @@
  * @when 09/03/15
  *
  */
-App::uses('CakeRequest', 'Network');
-App::uses('Controller', 'Controller');
-App::uses('View', 'View');
-App::uses('SeoHelper', 'Seo.View/Helper');
 
-class SeoHelperTest extends CakeTestCase {
+use Cake\Core\Configure;
+use Cake\Network\Request;
+use Cake\Controller\Controller;
+use Cake\View\View;
+use Seo\View\Helper\SeoHelper;
+
+class SeoHelperTest extends \PHPUnit_Framework_TestCase {
 
 	public function paginationProvider() {
 		return [
@@ -23,7 +27,7 @@ class SeoHelperTest extends CakeTestCase {
 					'prevPage' => true,
 					'nextPage' => true
 				]],
-				"<link rel='next' href='/Tests/index/page:6'><link rel='prev' href='/Tests/index/page:4'>"
+				"<link rel='next' href='/tests?page=6'><link rel='prev' href='/tests?page=4'>"
 			],
 			[
 				['Test' => [
@@ -31,7 +35,7 @@ class SeoHelperTest extends CakeTestCase {
 					'prevPage' => false,
 					'nextPage' => true
 				]],
-				"<link rel='next' href='/Tests/index/page:2'>"
+				"<link rel='next' href='/tests?page=2'>"
 			],
 			[
 				['Test' => [
@@ -39,94 +43,81 @@ class SeoHelperTest extends CakeTestCase {
 					'prevPage' => true,
 					'nextPage' => false
 				]],
-				"<link rel='prev' href='/Tests/index/page:5'>"
+				"<link rel='prev' href='/tests?page=5'>"
 			],
 		];
 	}
 
-/**
- * @param $pagingArray
- * @param $expected
- * @dataProvider paginationProvider
- */
-	public function testPagination($pagingArray, $expected) {
-		$this->Request = new CakeRequest();
+    /**
+     * @param $pagingArray
+     * @param $expected
+     * @dataProvider paginationProvider
+     */
+	public function testPagination($pagingArray, $expected)
+    {
+		$this->Request = new Request();
 		$this->Request->params['paging'] = $pagingArray;
 
 		$this->Controller = new Controller($this->Request);
 		$this->Controller->name = 'Tests';
 
-		$this->View = new View($this->Controller);
+		$this->View = new View($this->Request);
 
 		$helper = new SeoHelper($this->View);
 		$helper->paginatedControllers = ['Tests'];
 
 		$result = $helper->pagination($this->Controller->name);
-		$this->assertEqual($result, $expected);
+		$this->assertEquals($expected, $result);
 	}
 
-	public function canonicalProvider() {
+	public function canonicalProvider()
+    {
 		return [
 			[
-				'/tests/index',
-				[],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests',
+				"<link rel='canonical' href='http://localhost/tests'>"
 			],
 			[
-				'/tests/index/page:5',
-				[],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests?page=5',
+				"<link rel='canonical' href='http://localhost/tests'>"
 			],
 			[
-				'/tests/index/page:5',
-				[
-					'sort' => 'id'
-				],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests?sort=id&page=5',
+				"<link rel='canonical' href='http://localhost/tests'>"
 			],
 			[
-				'/tests/index/page:5',
-				[
-					'dir' => 'desc'
-				],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests?dir=desc&page=5',
+				"<link rel='canonical' href='http://localhost/tests'>"
 			],
 			[
-				'/tests/index/page:5',
-				[
-					'sort' => 'id',
-					'dir' => 'desc'
-				],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
+				'/tests?sort=id&dir=desc',
+				"<link rel='canonical' href='http://localhost/tests'>"
 			],
-			[
-				'/tests/index',
-				[
-					'sort' => 'id',
-					'dir' => 'desc'
-				],
-				"<link rel='canonical' href='http://localhost/tests/index'>"
-			],
+            [
+                '/tests?page=5&sort=id&dir=desc',
+                "<link rel='canonical' href='http://localhost/tests'>"
+            ],
 		];
 	}
 
-/**
- * @param $paramsArray
- * @param $expected
- * @dataProvider canonicalProvider
- */
-	public function testCanonical($here, $paramsArray, $expected) {
-		$this->Request = new CakeRequest();
-		$this->Request->params = $paramsArray;
+    /**
+     * @param $expected
+     * @dataProvider canonicalProvider
+     */
+	public function testCanonical($here, $expected)
+    {
+        Configure::write('App.fullBaseUrl', 'http://localhost');
+
+		$this->Request = new Request();
 		$this->Request->here = $here;
 
 		$this->Controller = new Controller($this->Request);
 		$this->Controller->name = 'Tests';
 
-		$this->View = new View($this->Controller);
+		$this->View = new View($this->Request);
 
 		$helper = new SeoHelper($this->View);
-		$result = $helper->canonical('tests', 'index');
-		$this->assertEqual($result, $expected);
+		$result = $helper->canonical('Tests', 'index');
+		$this->assertEquals($expected, $result);
 	}
 }
