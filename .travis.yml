@@ -9,14 +9,14 @@ env:
     - PLUGIN_NAME=Seo
 
   matrix:
-    - CAKE_VERSION=2.5
-    - CAKE_VERSION=2.6
+    - CAKE_VERSION=3.0.8
+    - CAKE_VERSION=3.0.0
 
 matrix:
   include:
     - php: 5.5
       env:
-        - CAKE_VERSION=2.6
+        - CAKE_VERSION=3.0.8
         - COVERALLS=1
     - php: 5.4
       env:
