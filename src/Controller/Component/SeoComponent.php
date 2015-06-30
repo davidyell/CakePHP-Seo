@@ -28,7 +28,6 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     protected $_defaultConfig = [
         'viewVar' => 'content', // Name of the view variable being used in views
-        'model' => 'Content', // Model containing the fields
         'fields' => [
             'title' => 'seo_title',
             'description' => 'seo_description',
@@ -77,13 +76,13 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function writeSeo(Event $event)
     {
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.title')])) {
-            $seoTitle = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.title')];
-            $event->subject()->viewVars['title'] = $seoTitle;
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title')))) {
+            $seoTitle = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title'));
+            $event->subject()->assign('title', $seoTitle);
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.description')])) {
-            $seoDescription = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.description')];
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.description')))) {
+            $seoDescription = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.description'));
             $event->subject()->Html->meta(
                 'description',
                 $seoDescription,
@@ -91,8 +90,8 @@ class SeoComponent extends Component implements EventListenerInterface
             );
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.keywords')])) {
-            $seoKeywords = $event->subject()->viewVars[$this->config('viewVar')][$this->config('model')][$this->config('fields.keywords')];
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.keywords')))) {
+            $seoKeywords = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.keywords'));
             $event->subject()->Html->meta(
                 'keywords',
                 $seoKeywords,
