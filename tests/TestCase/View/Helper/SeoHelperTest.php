@@ -16,6 +16,7 @@ use Cake\Core\Configure;
 use Cake\Network\Request;
 use Cake\View\View;
 use Seo\View\Helper\SeoHelper;
+use Cake\Routing\Router;
 
 class SeoHelperTest extends \PHPUnit_Framework_TestCase
 {
