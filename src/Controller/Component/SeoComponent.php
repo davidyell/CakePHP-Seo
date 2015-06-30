@@ -76,12 +76,12 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function writeSeo(Event $event)
     {
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title')))) {
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
             $seoTitle = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title'));
             $event->subject()->assign('title', $seoTitle);
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.description')))) {
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
             $seoDescription = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.description'));
             $event->subject()->Html->meta(
                 'description',
@@ -90,7 +90,7 @@ class SeoComponent extends Component implements EventListenerInterface
             );
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.keywords')))) {
+        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
             $seoKeywords = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.keywords'));
             $event->subject()->Html->meta(
                 'keywords',

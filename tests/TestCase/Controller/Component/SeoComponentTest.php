@@ -14,6 +14,7 @@ namespace Seo\Tests\Controller\Component;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Seo\Controller\Component\SeoComponent;
 
 class SeoComponentTest extends \PHPUnit_Framework_TestCase
@@ -36,20 +37,18 @@ class SeoComponentTest extends \PHPUnit_Framework_TestCase
         $view->expects($this->exactly(2))
             ->method('append');
 
-        $view->set('content', [
-            'Content' => [
-                'seo_title' => 'Test SEO title',
-                'seo_description' => 'Test SEO description',
-                'seo_keywords' => 'Test SEO keywords'
-            ]
-        ]);
+        $view->set('content', new Entity([
+            'seo_title' => 'Test SEO title',
+            'seo_description' => 'Test SEO description',
+            'seo_keywords' => 'Test SEO keywords'
+        ]));
 
         $event = new Event('view.beforeLayout', $view, []);
 
         $this->Seo->writeSeo($event);
 
-        $title = $event->subject()->viewVars['title'];
-        $this->assertEquals('Test SEO title', $title);
+        $this->assertEquals(true, $event->subject()->exists('title'));
+        $this->assertEquals('Test SEO title', $event->subject()->fetch('title'));
     }
 
     public function testWriteSeoEmptyConfig()
@@ -65,7 +64,9 @@ class SeoComponentTest extends \PHPUnit_Framework_TestCase
 
         $this->Seo->writeSeo($event);
 
-        $title = $event->subject()->viewVars['title'];
-        $this->assertEquals('The homepage | My Awesome Website', $title);
+        $this->assertEquals(true, $event->subject()->exists('title'));
+        $this->assertEquals('The homepage | My Awesome Website', $event->subject()->fetch('title'));
+
+
     }
 }
