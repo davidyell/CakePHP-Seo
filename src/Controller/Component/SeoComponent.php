@@ -102,7 +102,7 @@ class SeoComponent extends Component implements EventListenerInterface
 
         // If no values can be found, fall back to the defaults
         if (empty($seoTitle)) {
-            $event->subject()->viewVars['title'] = $this->config('defaults.title');
+            $event->subject()->assign('title', $this->config('defaults.title'));
         }
         if (empty($seoDescription)) {
             $event->subject()->Html->meta('description', $this->config('defaults.description'), ['block' => 'meta']);
