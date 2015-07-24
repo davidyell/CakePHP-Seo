@@ -35,8 +35,8 @@ class SeoHelper extends Helper
             $className = Inflector::classify($controller);
 
             if (isset($this->request->params['paging'][$className])) {
-                $prev = "<link rel='prev' href='" . Router::url(['controller' => $controller, 'action' => 'index', 'page' => $this->request->params['paging'][$className]['page'] - 1]) . "'>";
-                $next = "<link rel='next' href='" . Router::url(['controller' => $controller, 'action' => 'index', 'page' => $this->request->params['paging'][$className]['page'] + 1]) . "'>";
+                $prev = "<link rel='prev' href='" . $this->pageLink($controller, $this->request->params['paging'][$className]['page'], 'prev') . "'>";
+                $next = "<link rel='next' href='" . $this->pageLink($controller, $this->request->params['paging'][$className]['page'], 'next') . "'>";
 
                 if ($this->request->params['paging'][$className]['prevPage'] === false) { // page 1
                     return $next;
@@ -60,5 +60,30 @@ class SeoHelper extends Helper
         $url = Router::fullbaseUrl() . $url['path'];
 
         return "<link rel='canonical' href='$url'>";
+    }
+
+    /**
+     * Build a url link for the previous and next pages
+     *
+     * @param string $controller The name of the controller
+     * @param int $page The current page
+     * @param string $type 'prev' or 'next'
+     * @param bool $full Include the fullBaseUrl?
+     * @return string Complete url string
+     */
+    public function pageLink($controller, $page, $type, $full = false)
+    {
+        if ($type == 'next') {
+            $p = ['page' => $page + 1];
+        } else {
+            $p = ['page' => $page - 1];
+        }
+
+        $url = array_merge(
+            ['controller' => $controller, 'action' => 'index'],
+            $p
+        );
+
+        return Router::url($url, $full);
     }
 }
