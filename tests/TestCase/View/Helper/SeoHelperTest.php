@@ -19,11 +19,13 @@ use Seo\View\Helper\SeoHelper;
 
 class SeoHelperTest extends \PHPUnit_Framework_TestCase
 {
+    // @codingStandardsIgnoreStart
     protected function setUp()
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://localhost');
     }
+    // @codingStandardsIgnoreEnd
 
     public function paginationProvider()
     {
@@ -154,5 +156,4 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
         $result = $helper->canonical('Tests', 'index');
         $this->assertEquals($expected, $result);
     }
-
 }

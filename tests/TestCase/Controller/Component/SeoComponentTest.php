@@ -66,7 +66,5 @@ class SeoComponentTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $event->subject()->exists('title'));
         $this->assertEquals('The homepage | My Awesome Website', $event->subject()->fetch('title'));
-
-
     }
 }
