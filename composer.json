@@ -14,7 +14,7 @@
     "cakephp/cakephp": "~3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "4.7.*",
     "cakephp/cakephp-codesniffer": "~2.0"
   },
   "autoload": {
