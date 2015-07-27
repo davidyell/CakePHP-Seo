@@ -8,27 +8,32 @@ I always need to add meta tags to my pages for SEO purposes and it was getting t
 
 I found that by containing all the functionality for SEO inside a component it makes it easier to manage.
 
+# Requirements
+* CakePHP 3
+* PHP 5.4.16+
+
 # Installation
-## Git
-Clone the repo into your `app/Plugin` folder. `git clone https://github.com/davidyell/CakePHP-Seo.git app/Plugin/Seo`
-## Composer
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
 
+```bash
+composer require 'davidyell/seo:dev-master'
+```
+
 # Setup
-Firstly you will need to load the plugin in your `app/Config/bootstrap.php`.
-`CakePlugin::load('Seo');`
+Firstly you will need to load the plugin in your `/config/bootstrap.php`.
+```php
+Plugin::load('Seo');
+```
 
 Then you will need to attach it to the controller you want it to run on. I tend to attach it to my `AppController`.
 
 ```php
-// app/Controller/AppController.php
-public $components = [
-	'Seo.Seo' => [
-		'defaults' => [
-			'title' => 'Dave is epic',
-			'description' => 'This is an epic plugin for epic people',
-			'keywords' => 'epic,plugin'
-		]
+// src/Controller/AppController.php initialize() method
+$this->loadComponent('Seo.Seo' => [
+	'defaults' => [
+		'title' => 'Dave is epic',
+		'description' => 'This is an epic plugin for epic people',
+		'keywords' => 'epic,plugin'
 	]
 ];
 ```
