@@ -19,8 +19,18 @@ class SeoHelper extends Helper
      * Keep a list of all the controllers which generate paginated lists of items
      *
      * @var array
+     * @deprecated since 3.0.1
      */
     public $paginatedControllers = [];
+
+    /**
+     * Default helper configuraiton
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'paginatedControllers' => []
+    ];
 
     /**
      * When using a paginated set of pages a link tag is used to show which pages
@@ -31,16 +41,14 @@ class SeoHelper extends Helper
      */
     public function pagination($controller)
     {
-        if (in_array($controller, $this->paginatedControllers)) {
-            $className = Inflector::classify($controller);
+        if (in_array($controller, $this->getConfig('paginatedControllers'))) {
+            if (!empty($this->request->getParam('paging')[$controller])) {
+                $prev = "<link rel='prev' href='" . $this->pageLink($controller, $this->request->params['paging'][$controller]['page'], 'prev') . "'>";
+                $next = "<link rel='next' href='" . $this->pageLink($controller, $this->request->params['paging'][$controller]['page'], 'next') . "'>";
 
-            if (isset($this->request->params['paging'][$className])) {
-                $prev = "<link rel='prev' href='" . $this->pageLink($controller, $this->request->params['paging'][$className]['page'], 'prev') . "'>";
-                $next = "<link rel='next' href='" . $this->pageLink($controller, $this->request->params['paging'][$className]['page'], 'next') . "'>";
-
-                if ($this->request->params['paging'][$className]['prevPage'] === false) { // page 1
+                if ($this->request->params['paging'][$controller]['prevPage'] === false) { // page 1
                     return $next;
-                } elseif ($this->request->params['paging'][$className]['nextPage'] === false) {
+                } elseif ($this->request->params['paging'][$controller]['nextPage'] === false) {
                     return $prev;
                 } else {
                     return $next . $prev;

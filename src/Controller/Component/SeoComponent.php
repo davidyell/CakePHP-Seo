@@ -40,7 +40,14 @@ class SeoComponent extends Component implements EventListenerInterface
             'keywords' => 'my, website, is, totally, awesome'
         ]
     ];
-    
+
+    /**
+     * Has the SEO been injected already? Prevent duplicate amends to the meta block
+     *
+     * @var bool
+     */
+    private $hasRun = false;
+
     /**
      * Create the class
      *
@@ -76,6 +83,10 @@ class SeoComponent extends Component implements EventListenerInterface
      */
     public function writeSeo(Event $event)
     {
+        if ($this->hasRun === true) {
+            return;
+        }
+
         if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
             $seoTitle = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title'));
             $event->subject()->assign('title', $seoTitle);
@@ -86,7 +97,7 @@ class SeoComponent extends Component implements EventListenerInterface
             $event->subject()->Html->meta(
                 'description',
                 $seoDescription,
-                ['block' => 'meta']
+                ['block' => true]
             );
         }
 
@@ -95,7 +106,7 @@ class SeoComponent extends Component implements EventListenerInterface
             $event->subject()->Html->meta(
                 'keywords',
                 $seoKeywords,
-                ['block' => 'meta']
+                ['block' => true]
             );
         }
 
@@ -104,10 +115,12 @@ class SeoComponent extends Component implements EventListenerInterface
             $event->subject()->assign('title', $this->config('defaults.title'));
         }
         if (empty($seoDescription)) {
-            $event->subject()->Html->meta('description', $this->config('defaults.description'), ['block' => 'meta']);
+            $event->subject()->Html->meta('description', $this->config('defaults.description'), ['block' => true]);
         }
         if (empty($seoKeywords)) {
-            $event->subject()->Html->meta('keywords', $this->config('defaults.keywords'), ['block' => 'meta']);
+            $event->subject()->Html->meta('keywords', $this->config('defaults.keywords'), ['block' => true]);
         }
+
+        $this->hasRun = true;
     }
 }
