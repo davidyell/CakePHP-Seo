@@ -9,8 +9,8 @@ I always need to add meta tags to my pages for SEO purposes and it was getting t
 I found that by containing all the functionality for SEO inside a component it makes it easier to manage.
 
 # Requirements
-* CakePHP 3
-* PHP 5.4.16+
+* CakePHP 3.4+
+* PHP 7.1+
 
 # Installation
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
@@ -62,4 +62,15 @@ if (isset($this->viewVars['content'])) {
 } elseif (isset($this->viewVars['provider'])) {
 	$this->Components->load('Seo.Seo', ['viewVar' => 'provider']);
 }
+```
+
+The viewVar access accepts a hash path, so you can use dot notation to access deeply nested data.
+
+```php
+$this->Components->load('Seo.Seo', [
+    'viewVar' => 'catalog',
+    'fields' => [
+        'title' => 'assigned_content.content.seo_title'
+    ]
+]);
 ```
