@@ -10,11 +10,11 @@
     }
   ],
   "require": {
-    "php": ">=5.4.16",
-    "cakephp/cakephp": "~3.0"
+    "php": ">=7.1",
+    "cakephp/cakephp": "~3.4"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.7.*",
+    "phpunit/phpunit": "*",
     "cakephp/cakephp-codesniffer": "~2.0"
   },
   "autoload": {

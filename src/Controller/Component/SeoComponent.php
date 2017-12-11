@@ -5,6 +5,7 @@ namespace Seo\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Utility\Hash;
 
 /**
  * Component to find and load seo data and inject it into the view
@@ -88,12 +89,22 @@ class SeoComponent extends Component implements EventListenerInterface
         }
 
         if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
-            $seoTitle = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.title'));
+            $seoTitle = Hash::get(
+                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $this->getConfig('fields.title'),
+                $this->getConfig('defaults.title')
+            );
+
             $event->subject()->assign('title', $seoTitle);
         }
 
         if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
-            $seoDescription = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.description'));
+            $seoDescription = Hash::get(
+                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $this->getConfig('fields.description'),
+                $this->getConfig('defaults.description')
+            );
+
             $event->subject()->Html->meta(
                 'description',
                 $seoDescription,
@@ -102,7 +113,12 @@ class SeoComponent extends Component implements EventListenerInterface
         }
 
         if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
-            $seoKeywords = $event->subject()->viewVars[$this->config('viewVar')]->get($this->config('fields.keywords'));
+            $seoKeywords = Hash::get(
+                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $this->getConfig('fields.keywords'),
+                $this->getConfig('defaults.keywords')
+            );
+
             $event->subject()->Html->meta(
                 'keywords',
                 $seoKeywords,

@@ -15,9 +15,10 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
+use Cake\TestSuite\TestCase;
 use Seo\Controller\Component\SeoComponent;
 
-class SeoComponentTest extends \PHPUnit_Framework_TestCase
+class SeoComponentTest extends TestCase
 {
 
     public function setUp()
@@ -47,8 +48,8 @@ class SeoComponentTest extends \PHPUnit_Framework_TestCase
 
         $this->Seo->writeSeo($event);
 
-        $this->assertEquals(true, $event->subject()->exists('title'));
-        $this->assertEquals('Test SEO title', $event->subject()->fetch('title'));
+        $this->assertEquals(true, $event->getSubject()->exists('title'));
+        $this->assertEquals('Test SEO title', $event->getSubject()->fetch('title'));
     }
 
     public function testWriteSeoEmptyConfig()
@@ -64,7 +65,7 @@ class SeoComponentTest extends \PHPUnit_Framework_TestCase
 
         $this->Seo->writeSeo($event);
 
-        $this->assertEquals(true, $event->subject()->exists('title'));
-        $this->assertEquals('The homepage | My Awesome Website', $event->subject()->fetch('title'));
+        $this->assertEquals(true, $event->getSubject()->exists('title'));
+        $this->assertEquals('The homepage | My Awesome Website', $event->getSubject()->fetch('title'));
     }
 }
