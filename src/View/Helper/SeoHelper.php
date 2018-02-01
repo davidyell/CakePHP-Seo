@@ -62,7 +62,7 @@ class SeoHelper extends Helper
      *
      * @return string
      */
-    public function canonical()
+    public function canonical(): string
     {
         $url = parse_url($this->request->getUri()->getPath());
         $url = Router::fullbaseUrl() . $url['path'];
@@ -79,7 +79,7 @@ class SeoHelper extends Helper
      * @param bool $full Include the fullBaseUrl?
      * @return string Complete url string
      */
-    public function pageLink($controller, $page, $type, $full = false)
+    public function pageLink(string $controller, int $page, string $type, bool $full = false): string
     {
         if ($type == 'next') {
             $p = ['page' => $page + 1];

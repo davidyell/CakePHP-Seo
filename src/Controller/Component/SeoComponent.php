@@ -55,12 +55,12 @@ class SeoComponent extends Component implements EventListenerInterface
      * @param array $config The component configuration array
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         $this->_controller = $this->_registry->getController();
 
-        if (!in_array($this->_controller->request->prefix, $this->config('noSeoPrefix'))) {
-            $this->_controller->eventManager()->on($this);
+        if (!in_array($this->_controller->request->prefix, $this->getConfig('noSeoPrefix'))) {
+            $this->_controller->getEventManager()->on($this);
         }
     }
 
@@ -69,7 +69,7 @@ class SeoComponent extends Component implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'View.beforeLayout' => 'writeSeo'
@@ -82,44 +82,44 @@ class SeoComponent extends Component implements EventListenerInterface
      * @param \Cake\Event\Event $event Event instance
      * @return void
      */
-    public function writeSeo(Event $event)
+    public function writeSeo(Event $event): void
     {
         if ($this->hasRun === true) {
             return;
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
+        if (!empty($event->getSubject()->viewVars[$this->getConfig('viewVar')])) {
             $seoTitle = Hash::get(
-                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $event->getSubject()->viewVars[$this->getConfig('viewVar')],
                 $this->getConfig('fields.title'),
                 $this->getConfig('defaults.title')
             );
 
-            $event->subject()->assign('title', $seoTitle);
+            $event->getSubject()->assign('title', $seoTitle);
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
+        if (!empty($event->getSubject()->viewVars[$this->getConfig('viewVar')])) {
             $seoDescription = Hash::get(
-                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $event->getSubject()->viewVars[$this->getConfig('viewVar')],
                 $this->getConfig('fields.description'),
                 $this->getConfig('defaults.description')
             );
 
-            $event->subject()->Html->meta(
+            $event->getSubject()->Html->meta(
                 'description',
                 $seoDescription,
                 ['block' => true]
             );
         }
 
-        if (!empty($event->subject()->viewVars[$this->config('viewVar')])) {
+        if (!empty($event->getSubject()->viewVars[$this->getConfig('viewVar')])) {
             $seoKeywords = Hash::get(
-                $event->subject()->viewVars[$this->getConfig('viewVar')],
+                $event->getSubject()->viewVars[$this->getConfig('viewVar')],
                 $this->getConfig('fields.keywords'),
                 $this->getConfig('defaults.keywords')
             );
 
-            $event->subject()->Html->meta(
+            $event->getSubject()->Html->meta(
                 'keywords',
                 $seoKeywords,
                 ['block' => true]
@@ -128,13 +128,13 @@ class SeoComponent extends Component implements EventListenerInterface
 
         // If no values can be found, fall back to the defaults
         if (empty($seoTitle)) {
-            $event->subject()->assign('title', $this->config('defaults.title'));
+            $event->getSubject()->assign('title', $this->getConfig('defaults.title'));
         }
         if (empty($seoDescription)) {
-            $event->subject()->Html->meta('description', $this->config('defaults.description'), ['block' => true]);
+            $event->getSubject()->Html->meta('description', $this->getConfig('defaults.description'), ['block' => true]);
         }
         if (empty($seoKeywords)) {
-            $event->subject()->Html->meta('keywords', $this->config('defaults.keywords'), ['block' => true]);
+            $event->getSubject()->Html->meta('keywords', $this->getConfig('defaults.keywords'), ['block' => true]);
         }
 
         $this->hasRun = true;
