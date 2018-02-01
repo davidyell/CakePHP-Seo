@@ -4,7 +4,9 @@ CakePHP-Seo
 [![Coverage Status](https://coveralls.io/repos/davidyell/CakePHP-Seo/badge.svg)](https://coveralls.io/r/davidyell/CakePHP-Seo)
 
 # What is it?
-I always need to add meta tags to my pages for SEO purposes and it was getting tedious writing tools to complete this every time. So I created a component which hooks the event system to catch the `beforeLayout` event to inject SEO data into the view variables.
+I always need to add meta tags to my pages for SEO purposes and it was getting tedious writing tools to complete this 
+every time. So I created a component which hooks the event system to catch the `beforeLayout` event to inject SEO 
+data into the view variables.
 
 I found that by containing all the functionality for SEO inside a component it makes it easier to manage.
 
@@ -16,7 +18,7 @@ I found that by containing all the functionality for SEO inside a component it m
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
 
 ```bash
-composer require 'davidyell/seo:dev-master'
+composer require davidyell/seo
 ```
 
 # Setup
@@ -38,10 +40,13 @@ $this->loadComponent('Seo.Seo' => [
 ];
 ```
 
-There are a number of configuration settings you will need to change to match your setup. You can find these in the `$settings` class variable in the component. Primarily you will want to change the `$settings['defaults']` to set the default title, description and keywords for your website.
+There are a number of configuration settings you will need to change to match your setup. You can find these in the 
+`$settings` class variable in the component. Primarily you will want to change the `$settings['defaults']` to set the 
+default title, description and keywords for your website.
 
 # How it works
-The idea is that your model will have some fields editable in the CMS for SEO. Once this data is set to the view, the component will catch the data and inject it into your layout for you automatically.
+The idea is that your model will have some fields editable in the CMS for SEO. Once this data is set to the view, the 
+component will catch the data and inject it into your layout for you automatically.
 
 As such your layout will need some things to exist in order for the component to correctly add the data.
 
@@ -53,14 +58,20 @@ echo $this->fetch('title');
 echo $this->fetch('meta');
 ```
 
+# Database configuration
+This is for you to do. How you store your SEO data is outside the scope of this plugin. However I would recommend 
+creating fields either in your `Contents` table or associated to it, with `seo_title VARCHAR(255)`, 
+`seo_description TEXT`, and `seo_keywords VARCHAR(255)`. 
+
 # Tips and Tricks
 Got two viewVars set in your controller and you want to change it up depending on which is set?
 ```php
 // ProvidersController::beforeRender()
+
 if (isset($this->viewVars['content'])) {
-	$this->Components->load('Seo.Seo');
+    $this->components()->get('Seo')->setConfig('viewVar', 'article');
 } elseif (isset($this->viewVars['provider'])) {
-	$this->Components->load('Seo.Seo', ['viewVar' => 'provider']);
+    $this->components()->get('Seo')->setConfig('viewVar', 'provider');
 }
 ```
 
@@ -73,4 +84,12 @@ $this->Components->load('Seo.Seo', [
         'title' => 'assigned_content.content.seo_title'
     ]
 ]);
+```
+
+Don't forget that you can set the config directly on an instance of the component.
+
+```php
+// ExamplesController.php
+
+$this->components()->get('Seo')->setConfig('fields.title', 'My new title');
 ```
