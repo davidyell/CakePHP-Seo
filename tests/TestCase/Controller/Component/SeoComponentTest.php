@@ -20,7 +20,32 @@ use Seo\Controller\Component\SeoComponent;
 
 class SeoComponentTest extends TestCase
 {
+    /**
+     * Controller instance
+     *
+     * @var \Cake\Controller\Controller
+     */
+    private $Controller;
 
+    /**
+     * Component Registry instance
+     *
+     * @var \Cake\Controller\ComponentRegistry
+     */
+    private $ComponentRegistry;
+
+    /**
+     * Component instance
+     *
+     * @var \Seo\Controller\Component\SeoComponent
+     */
+    private $Seo;
+
+    /**
+     * Setup the test
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->Controller = new Controller();
@@ -29,6 +54,9 @@ class SeoComponentTest extends TestCase
         $this->Seo = new SeoComponent($this->ComponentRegistry);
     }
 
+    /**
+     * Test that seo fields can be written
+     */
     public function testWriteSeo()
     {
         $view = $this->getMockBuilder('Cake\View\View')
@@ -52,6 +80,9 @@ class SeoComponentTest extends TestCase
         $this->assertEquals('Test SEO title', $event->getSubject()->fetch('title'));
     }
 
+    /**
+     * Test the component copes with empty configuration
+     */
     public function testWriteSeoEmptyConfig()
     {
         $view = $this->getMockBuilder('Cake\View\View')

@@ -3,6 +3,7 @@
 namespace Seo\View\Helper;
 
 use Cake\Core\Configure;
+use Cake\Core\InstanceConfigTrait;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
@@ -14,14 +15,7 @@ use Cake\View\Helper;
  */
 class SeoHelper extends Helper
 {
-
-    /**
-     * Keep a list of all the controllers which generate paginated lists of items
-     *
-     * @var array
-     * @deprecated since 3.0.1
-     */
-    public $paginatedControllers = [];
+    use InstanceConfigTrait;
 
     /**
      * Default helper configuraiton
@@ -36,25 +30,31 @@ class SeoHelper extends Helper
      * When using a paginated set of pages a link tag is used to show which pages
      * are previous and next in the paginated series
      *
-     * @param string $controller The name of the controller
-     * @return string
+     * @param string $controllerName The name of the controller
+     * @return string|null
      */
-    public function pagination($controller)
+    public function pagination(string $controllerName): ?string
     {
-        if (in_array($controller, $this->getConfig('paginatedControllers'))) {
-            if (!empty($this->request->getParam('paging')[$controller])) {
-                $prev = "<link rel='prev' href='" . $this->pageLink($controller, $this->request->params['paging'][$controller]['page'], 'prev') . "'>";
-                $next = "<link rel='next' href='" . $this->pageLink($controller, $this->request->params['paging'][$controller]['page'], 'next') . "'>";
+        if (in_array($controllerName, $this->getConfig('paginatedControllers'))) {
+            $pagingParams = $this->request->getParam('paging');
 
-                if ($this->request->params['paging'][$controller]['prevPage'] === false) { // page 1
+            if (!empty($pagingParams[$controllerName])) {
+                $controllerPagingParams = $pagingParams[$controllerName];
+
+                $prev = "<link rel='prev' href='" . $this->pageLink($controllerName, $controllerPagingParams['page'], 'prev') . "'>";
+                $next = "<link rel='next' href='" . $this->pageLink($controllerName, $controllerPagingParams['page'], 'next') . "'>";
+
+                if ($controllerPagingParams['prevPage'] === false) { // page 1
                     return $next;
-                } elseif ($this->request->params['paging'][$controller]['nextPage'] === false) {
+                } elseif ($controllerPagingParams['nextPage'] === false) {
                     return $prev;
                 } else {
                     return $next . $prev;
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -64,7 +64,7 @@ class SeoHelper extends Helper
      */
     public function canonical()
     {
-        $url = parse_url($this->request->here);
+        $url = parse_url($this->request->getUri()->getPath());
         $url = Router::fullbaseUrl() . $url['path'];
 
         return "<link rel='canonical' href='$url'>";

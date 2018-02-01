@@ -13,25 +13,53 @@ namespace Seo\Tests\View\Helper;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
+use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Seo\View\Helper\SeoHelper;
 
-class SeoHelperTest extends \PHPUnit_Framework_TestCase
+class SeoHelperTest extends TestCase
 {
-    // @codingStandardsIgnoreStart
-    protected function setUp()
+    /**
+     * Request instance
+     *
+     * @var \Cake\Http\ServerRequest
+     */
+    private $Request;
+
+    /**
+     * Controller instance
+     *
+     * @var \Cake\Controller\Controller
+     */
+    private $Controller;
+
+    /**
+     * View instance
+     *
+     * @var \Cake\View\View
+     */
+    private $View;
+
+    /**
+     * Setup the test
+     */
+    public function setUp()
     {
         parent::setUp();
         Configure::write('App.fullBaseUrl', 'http://localhost');
     }
-    // @codingStandardsIgnoreEnd
 
+    /**
+     * Provider data sets for testing pagination
+     *
+     * @return array
+     */
     public function paginationProvider()
     {
         return [
             [
-                ['Test' => [
+                ['Tests' => [
                     'page' => 5,
                     'prevPage' => true,
                     'nextPage' => true
@@ -43,7 +71,7 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
                 "<link rel='next' href='/tests?page=6'><link rel='prev' href='/tests?page=4'>"
             ],
             [
-                ['Test' => [
+                ['Tests' => [
                     'page' => 1,
                     'prevPage' => false,
                     'nextPage' => true
@@ -54,7 +82,7 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
                 "<link rel='next' href='/tests?page=2'>"
             ],
             [
-                ['Test' => [
+                ['Tests' => [
                     'page' => 6,
                     'prevPage' => true,
                     'nextPage' => false
@@ -75,8 +103,11 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testPagination(array $pagingArray, array $urls, $expected)
     {
-        $this->Request = new Request();
-        $this->Request->params['paging'] = $pagingArray;
+        $this->Request = new ServerRequest([
+            'params' => [
+                'paging' => $pagingArray
+            ]
+        ]);
 
         $this->Controller = new Controller($this->Request);
         $this->Controller->name = 'Tests';
@@ -88,21 +119,21 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
             ->setMethods(['pageLink'])
             ->getMock();
 
-        if ($pagingArray['Test']['prevPage']) {
+        $helper->setConfig('paginatedControllers', ['Tests']);
+
+        if ($pagingArray['Tests']['prevPage']) {
             $helper->expects($this->at(0))
                 ->method('pageLink')
-                ->with($this->Controller->name, $pagingArray['Test']['page'], 'prev')
+                ->with($this->Controller->name, $pagingArray['Tests']['page'], 'prev')
                 ->willReturn($urls['prev']);
         }
 
-        if ($pagingArray['Test']['nextPage']) {
+        if ($pagingArray['Tests']['nextPage']) {
             $helper->expects($this->at(1))
                 ->method('pageLink')
-                ->with($this->Controller->name, $pagingArray['Test']['page'], 'next')
+                ->with($this->Controller->name, $pagingArray['Tests']['page'], 'next')
                 ->willReturn($urls['next']);
         }
-
-        $helper->paginatedControllers = ['Tests'];
 
         $result = $helper->pagination($this->Controller->name);
         $this->assertEquals($expected, $result);
@@ -144,8 +175,7 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanonical($here, $expected)
     {
-        $this->Request = new Request();
-        $this->Request->here = $here;
+        $this->Request = new ServerRequest($here);
 
         $this->Controller = new Controller($this->Request);
         $this->Controller->name = 'Tests';
@@ -155,5 +185,41 @@ class SeoHelperTest extends \PHPUnit_Framework_TestCase
         $helper = new SeoHelper($this->View);
         $result = $helper->canonical('Tests', 'index');
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Ensure that if the helper is called against a non-paginated controller it doesn't break the front-end with a
+     * hard error
+     */
+    public function testNonPaginatedController()
+    {
+        $this->Request = new ServerRequest([
+            'params' => [
+                'paging' => ['Tests' => [
+                    'page' => 5,
+                    'prevPage' => true,
+                    'nextPage' => true
+                ]]
+            ]
+        ]);
+
+        $this->Controller = new Controller($this->Request);
+        $this->Controller->name = 'Tests';
+
+        $this->View = new View($this->Request);
+
+        $helper = $this->getMockBuilder('Seo\View\Helper\SeoHelper')
+            ->setConstructorArgs([$this->View])
+            ->setMethods(['pageLink'])
+            ->getMock();
+
+        $helper->expects($this->never())
+            ->method('pageLink');
+
+        $helper->expects($this->never())
+            ->method('pageLink');
+
+        $result = $helper->pagination($this->Controller->name);
+        $this->assertNull($result);
     }
 }
