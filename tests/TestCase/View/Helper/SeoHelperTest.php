@@ -14,6 +14,7 @@ namespace Seo\Tests\View\Helper;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Seo\View\Helper\SeoHelper;
@@ -59,11 +60,13 @@ class SeoHelperTest extends TestCase
     {
         return [
             [
-                ['Tests' => [
-                    'page' => 5,
-                    'prevPage' => true,
-                    'nextPage' => true
-                ]],
+                [
+                    'Tests' => [
+                        'page' => 5,
+                        'prevPage' => true,
+                        'nextPage' => true
+                    ]
+                ],
                 [
                     'next' => '/tests?page=6',
                     'prev' => '/tests?page=4'
@@ -71,22 +74,26 @@ class SeoHelperTest extends TestCase
                 "<link rel='next' href='/tests?page=6'><link rel='prev' href='/tests?page=4'>"
             ],
             [
-                ['Tests' => [
-                    'page' => 1,
-                    'prevPage' => false,
-                    'nextPage' => true
-                ]],
+                [
+                    'Tests' => [
+                        'page' => 1,
+                        'prevPage' => false,
+                        'nextPage' => true
+                    ]
+                ],
                 [
                     'next' => '/tests?page=2'
                 ],
                 "<link rel='next' href='/tests?page=2'>"
             ],
             [
-                ['Tests' => [
-                    'page' => 6,
-                    'prevPage' => true,
-                    'nextPage' => false
-                ]],
+                [
+                    'Tests' => [
+                        'page' => 6,
+                        'prevPage' => true,
+                        'nextPage' => false
+                    ]
+                ],
                 [
                     'prev' => '/tests?page=5'
                 ],
@@ -195,11 +202,13 @@ class SeoHelperTest extends TestCase
     {
         $this->Request = new ServerRequest([
             'params' => [
-                'paging' => ['Tests' => [
-                    'page' => 5,
-                    'prevPage' => true,
-                    'nextPage' => true
-                ]]
+                'paging' => [
+                    'Tests' => [
+                        'page' => 5,
+                        'prevPage' => true,
+                        'nextPage' => true
+                    ]
+                ]
             ]
         ]);
 
@@ -221,5 +230,41 @@ class SeoHelperTest extends TestCase
 
         $result = $helper->pagination($this->Controller->name);
         $this->assertNull($result);
+    }
+
+    public function pageLinkProvider()
+    {
+        return [
+            'Next page on page 1' => ['Examples', 1, 'next', false, '/examples?page=2'],
+            'Prev page on page 4' => ['Examples', 4, 'prev', false, '/examples?page=3'],
+            'Next page on page 4' => ['Examples', 4, 'next', false, '/examples?page=5'],
+            'Prev page on page 1' => ['Examples', 1, 'prev', false, '/examples?page=1'],
+            'Next on invalid page' => ['Examples', 0, 'next', false, '/examples?page=1'],
+            'Prev on invalid page' => ['Examples', 0, 'prev', false, '/examples?page=1'],
+            'Invalid pagination direction' => ['Examples', 2, 'fish', false, '/examples?page=3'],
+            'Full url, next page on page 1' => ['Examples', 1, 'next', true, 'http://localhost/examples?page=2'],
+        ];
+    }
+
+    /**
+     * @dataProvider pageLinkProvider
+     *
+     * @param string $controller
+     * @param int $page
+     * @param string $type
+     * @param bool $full
+     * @param string $expected
+     */
+    public function testPageLink(string $controller, int $page, string $type, bool $full, string $expected)
+    {
+        Router::connect('/examples', ['controller' => 'Examples', 'action' => 'index']);
+
+        $helper = new SeoHelper(
+            new View(),
+            ['paginatedControllers' => ['Examples']]
+        );
+
+        $result = $helper->pageLink($controller, $page, $type, $full);
+        $this->assertEquals($expected, $result);
     }
 }

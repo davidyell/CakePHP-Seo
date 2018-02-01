@@ -2,10 +2,8 @@
 
 namespace Seo\View\Helper;
 
-use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Routing\Router;
-use Cake\Utility\Inflector;
 use Cake\View\Helper;
 
 /**
@@ -18,7 +16,7 @@ class SeoHelper extends Helper
     use InstanceConfigTrait;
 
     /**
-     * Default helper configuraiton
+     * Default helper configuration
      *
      * @var array
      */
@@ -73,23 +71,27 @@ class SeoHelper extends Helper
     /**
      * Build a url link for the previous and next pages
      *
-     * @param string $controller The name of the controller
+     * @param string $controllerName The name of the controller
      * @param int $page The current page
-     * @param string $type 'prev' or 'next'
+     * @param string $direction 'prev' or 'next'
      * @param bool $full Include the fullBaseUrl?
      * @return string Complete url string
      */
-    public function pageLink(string $controller, int $page, string $type, bool $full = false): string
+    public function pageLink(string $controllerName, int $page, string $direction, bool $full = false): string
     {
-        if ($type == 'next') {
-            $p = ['page' => $page + 1];
+        if ($direction === 'prev') {
+            $page--;
         } else {
-            $p = ['page' => $page - 1];
+            $page++;
+        }
+
+        if ($page <= 0) {
+            $page = 1;
         }
 
         $url = array_merge(
-            ['controller' => $controller, 'action' => 'index'],
-            $p
+            ['controller' => $controllerName, 'action' => 'index'],
+            ['page' => $page]
         );
 
         return Router::url($url, $full);
