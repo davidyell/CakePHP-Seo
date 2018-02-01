@@ -15,6 +15,9 @@ matrix:
 
   include:
   - php: 7.1
+    env: DEFAULT=1
+
+  - php: 7.1
     env: PHPCS=1 DEFAULT=0
 
   - php: 7.1
