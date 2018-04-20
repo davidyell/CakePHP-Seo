@@ -59,7 +59,7 @@ class SeoComponent extends Component implements EventListenerInterface
     {
         $this->_controller = $this->_registry->getController();
 
-        if (!in_array($this->_controller->request->prefix, $this->getConfig('noSeoPrefix'))) {
+        if (!in_array($this->_controller->request->getParam('prefix'), $this->getConfig('noSeoPrefix'))) {
             $this->_controller->getEventManager()->on($this);
         }
     }
