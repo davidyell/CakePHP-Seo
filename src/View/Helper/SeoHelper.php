@@ -63,7 +63,7 @@ class SeoHelper extends Helper
     public function canonical(): string
     {
         $url = parse_url($this->request->getUri()->getPath());
-        $url = Router::fullbaseUrl() . $url['path'];
+        $url = Router::fullbaseUrl() . preg_replace("/[^\w\d-\/]+/", "-", $url['path']);
 
         return "<link rel='canonical' href='$url'>";
     }
