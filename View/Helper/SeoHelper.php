@@ -61,9 +61,9 @@ class SeoHelper extends AppHelper {
 			$url = str_replace($this->request->params['dir'], '', $url);
 		}
 		$url = rtrim($url, '/');
-		$url = Router::fullbaseUrl() . $url;
+		$url = Router::fullbaseUrl() . preg_replace("/[^\w\d-\/]+/", "-", $url);
 
-		return "<link rel='canonical' href='$url'>";
+		return "<link rel='canonical' href='" . $url . "'>";
 	}
 
 }
