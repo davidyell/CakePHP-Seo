@@ -11,8 +11,8 @@ data into the view variables.
 I found that by containing all the functionality for SEO inside a component it makes it easier to manage.
 
 # Requirements
-* CakePHP 3.4+
-* PHP 7.1+
+* CakePHP 3.6+
+* PHP 7.2+
 
 # Installation
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
