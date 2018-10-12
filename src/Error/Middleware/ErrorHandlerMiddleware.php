@@ -36,20 +36,15 @@ class ErrorHandlerMiddleware extends \Cake\Error\Middleware\ErrorHandlerMiddlewa
     /**
      * Constructor
      *
-     * @param string|callable|null $exceptionRenderer The renderer or class name
-     *   to use or a callable factory. If null, Configure::read('Error.exceptionRenderer')
-     *   will be used.
-     * @param array $config Configuration options to use. If empty, `Configure::read('Error')`
-     *   will be used.
-     * @param array $redirects
+     * @param array $redirects Array of redirects to process
      */
-    public function __construct($exceptionRenderer = null, array $config = [], array $redirects = [])
+    public function __construct(array $redirects = [])
     {
-        parent::__construct($exceptionRenderer, $config);
-
         if (!empty($redirects)) {
             $this->redirects = $redirects;
         }
+
+        parent::__construct();
     }
 
     /**
