@@ -34,6 +34,25 @@ class ErrorHandlerMiddleware extends \Cake\Error\Middleware\ErrorHandlerMiddlewa
     private $redirects = [];
 
     /**
+     * Constructor
+     *
+     * @param string|callable|null $exceptionRenderer The renderer or class name
+     *   to use or a callable factory. If null, Configure::read('Error.exceptionRenderer')
+     *   will be used.
+     * @param array $config Configuration options to use. If empty, `Configure::read('Error')`
+     *   will be used.
+     * @param array $redirects
+     */
+    public function __construct($exceptionRenderer = null, array $config = [], array $redirects = [])
+    {
+        parent::__construct($exceptionRenderer, $config);
+
+        if (!empty($redirects)) {
+            $this->redirects = $redirects;
+        }
+    }
+
+    /**
      * Handle an exception and generate an error response
      *
      * @param Exception $exception The exception to handle.
@@ -44,6 +63,10 @@ class ErrorHandlerMiddleware extends \Cake\Error\Middleware\ErrorHandlerMiddlewa
      */
     public function handleException($exception, $request, $response): ResponseInterface
     {
+        if (empty($this->redirects)) {
+            return parent::handleException($exception, $request, $response);
+        }
+
         if ($exception instanceof NotFoundException || $exception instanceof MissingRouteException) {
             $redirector = new Redirector($this->redirects);
             $redirect = $redirector->find($request->getUri()->getPath());
