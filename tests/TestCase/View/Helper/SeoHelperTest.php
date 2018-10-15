@@ -117,7 +117,7 @@ class SeoHelperTest extends TestCase
         ]);
 
         $this->Controller = new Controller($this->Request);
-        $this->Controller->name = 'Tests';
+        $this->Controller->setName('Tests');
 
         $this->View = new View($this->Request);
 
@@ -131,18 +131,18 @@ class SeoHelperTest extends TestCase
         if ($pagingArray['Tests']['prevPage']) {
             $helper->expects($this->at(0))
                 ->method('pageLink')
-                ->with($this->Controller->name, $pagingArray['Tests']['page'], 'prev')
+                ->with($this->Controller->getname(), $pagingArray['Tests']['page'], 'prev')
                 ->willReturn($urls['prev']);
         }
 
         if ($pagingArray['Tests']['nextPage']) {
             $helper->expects($this->at(1))
                 ->method('pageLink')
-                ->with($this->Controller->name, $pagingArray['Tests']['page'], 'next')
+                ->with($this->Controller->getname(), $pagingArray['Tests']['page'], 'next')
                 ->willReturn($urls['next']);
         }
 
-        $result = $helper->pagination($this->Controller->name);
+        $result = $helper->pagination($this->Controller->getname());
         $this->assertEquals($expected, $result);
     }
 
@@ -185,7 +185,7 @@ class SeoHelperTest extends TestCase
         $this->Request = new ServerRequest($here);
 
         $this->Controller = new Controller($this->Request);
-        $this->Controller->name = 'Tests';
+        $this->Controller->setName('Tests');
 
         $this->View = new View($this->Request);
 
@@ -213,7 +213,7 @@ class SeoHelperTest extends TestCase
         ]);
 
         $this->Controller = new Controller($this->Request);
-        $this->Controller->name = 'Tests';
+        $this->Controller->setName('Tests');
 
         $this->View = new View($this->Request);
 
@@ -228,7 +228,7 @@ class SeoHelperTest extends TestCase
         $helper->expects($this->never())
             ->method('pageLink');
 
-        $result = $helper->pagination($this->Controller->name);
+        $result = $helper->pagination($this->Controller->getName());
         $this->assertNull($result);
     }
 

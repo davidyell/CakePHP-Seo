@@ -11,15 +11,6 @@
     </testsuites>
 
     <filter>
-        <!-- Prevent coverage reports from looking in tests and vendors -->
-        <blacklist>
-            <directory suffix=".php">./vendor/</directory>
-            <directory suffix=".ctp">./vendor/</directory>
-
-            <directory suffix=".php">./tests/</directory>
-            <directory suffix=".ctp">./tests/</directory>
-        </blacklist>
-
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
         </whitelist>
