@@ -12,7 +12,7 @@
   "require": {
     "php": ">=7.2",
     "cakephp/cakephp": "~3.6",
-    "davidyell/seo-redirector": "0.0.1"
+    "davidyell/seo-redirector": "^0"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
