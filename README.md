@@ -11,8 +11,8 @@ data into the view variables.
 I found that by containing all the functionality for SEO inside a component it makes it easier to manage.
 
 # Requirements
-* CakePHP 3.4+
-* PHP 7.1+
+* CakePHP 3.6+
+* PHP 7.2+
 
 # Installation
 [https://packagist.org/packages/davidyell/seo](https://packagist.org/packages/davidyell/seo)
@@ -93,3 +93,20 @@ Don't forget that you can set the config directly on an instance of the componen
 
 $this->components()->get('Seo')->setConfig('fields.title', 'My new title');
 ```
+
+# Error handler middleware
+It is very helpful to be able to catch 404 errors and use them to manage your SEO redirecting. This allows for only urls 
+which do not match your application to be redirecting, avoiding any overhead.
+
+The plugin provides a basic middleware for this purpose which can be implemented into your `/src/Application.php`
+
+```
+$this->redirects = [
+    '/examples/first-example' => [
+        'target' => '/tutorials/first',
+        'code' => 301
+    ]
+];
+$queue->add(new \Seo\Error\Middleware\ErrorHandlerMiddleware($this->redirects))
+```
+

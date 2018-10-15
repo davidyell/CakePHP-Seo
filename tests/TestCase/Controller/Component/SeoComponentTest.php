@@ -49,7 +49,7 @@ class SeoComponentTest extends TestCase
     public function setUp()
     {
         $this->Controller = new Controller();
-        $this->Controller->name = 'TestsController';
+        $this->Controller->setName('TestsController');
         $this->ComponentRegistry = new ComponentRegistry($this->Controller);
         $this->Seo = new SeoComponent($this->ComponentRegistry);
     }
