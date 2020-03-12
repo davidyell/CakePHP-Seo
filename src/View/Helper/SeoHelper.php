@@ -21,7 +21,8 @@ class SeoHelper extends Helper
      * @var array
      */
     protected $_defaultConfig = [
-        'paginatedControllers' => []
+        'paginatedControllers' => [],
+        'domain' => null
     ];
 
     /**
@@ -63,7 +64,12 @@ class SeoHelper extends Helper
     public function canonical(): string
     {
         $parsedUrl = parse_url($this->request->getUri()->getPath());
-        $url = Router::fullbaseUrl() . preg_replace("/[^\w\d\-\/]+/", "-", $parsedUrl['path']);
+
+        $domain = Router::fullbaseUrl();
+        if ($this->getConfig('domain') !== null) {
+            $domain = $this->getConfig('domain');
+        }
+        $url = $domain . preg_replace("/[^\w\d\-\/]+/", "-", $parsedUrl['path']);
 
         return "<link rel='canonical' href='$url'>";
     }
