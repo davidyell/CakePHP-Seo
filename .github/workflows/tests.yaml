@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - 'master'
-    pull_request:
-      branches:
-        - 'master'
-    workflow_dispatch:
+  pull_request:
+    branches:
+      - 'master'
+  workflow_dispatch:
 
 env:
   DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
