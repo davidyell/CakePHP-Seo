@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - 'master'
+    pull_request:
+      branches:
+        - 'master'
+    workflow_dispatch:
+
+env:
+  DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+
+jobs:
+  tests:
+    name: Run test suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+          cache: composer
+
+      - name: Composer install
+        run: composer install
+
+      - name: Install Deepsource CLI
+        run: curl https://deepsource.io/cli | sh
+
+      - name: Run tests
+        run: composer run tests:coverage
+
+      - name: Push coverage to Deepsource
+        run: ./bin/deepsource report --analyzer test-coverage --key php --value-file ${GITHUB_WORKSPACE}/coverage.xml
